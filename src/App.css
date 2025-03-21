@@ -1,0 +1,183 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 85vh;
+  position: relative;
+  z-index: 1;
+}
+
+.app h1 {
+  font-size: 3rem;
+  color: #ebd0aa;
+  margin-bottom: 2rem;
+  margin-top: 6rem;
+}
+
+.app p {
+  font-size: 1.2rem;
+  color: #ebd0aa;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 6rem;
+}
+
+.control-btn {
+  background-color: transparent;
+  border: none;
+  color: #ebd0aa;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  outline: none;
+}
+
+.control-btn:focus {
+  outline: none;
+}
+
+.icon-wrapper {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.control-btn:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+.control-btn:active .icon-wrapper {
+  transform: scale(1.5) !important;
+  transition: none;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Estilos para o card de informações */
+.info-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.card-content {
+  background-color: rgba(30, 30, 30, 0.9);
+  border-radius: 15px;
+  width: 80%;
+  max-width: 500px;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.song-info {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.artist {
+  font-size: 2rem;
+  color: #ebd0aa;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-top: 0;
+}
+
+.share-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: transparent;
+  border: none;
+  color: #ebd0aa;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  outline: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: transparent;
+  border: none;
+  color: #ebd0aa;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  outline: none;
+}
+
+.share-btn .icon-wrapper,
+.close-btn .icon-wrapper {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.share-btn:hover .icon-wrapper,
+.close-btn:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+.share-btn:active .icon-wrapper,
+.close-btn:active .icon-wrapper {
+  transform: scale(1.5) !important;
+  transition: none;
+  color: #ffffff;
+}
