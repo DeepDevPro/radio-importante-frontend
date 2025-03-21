@@ -1,0 +1,14 @@
+name: radio-importante-frontend
+services:
+- name: web
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: DeepDevPro/radio-importante-frontend
+  build_command: npm install && npm run build
+  run_command: npm run preview
+  envs:
+  - key: VITE_API_URL
+    value: https://api.radioimportante.com
+  - key: VITE_SPACES_URL
+    value: https://radio-importante.nyc3.digitaloceanspaces.com 
