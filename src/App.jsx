@@ -30,7 +30,7 @@ function App() {
   return (
     <>
       <div className="app">
-        <h1>RADIO IMPORTANTE</h1>
+        <h1>🎵 RADIO IMPORTANTE</h1>
         <div className="controls">
           <button className="control-btn" onClick={togglePlay}>
             <span className="icon-wrapper">
