@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import Modal from 'react-modal';
 import { useDropzone } from 'react-dropzone';
 import Footer from '../components/Footer';
+import { API_URL } from '../config';
 import './AdminDashboard.css';
 
 // Vincular o modal ao elemento root da aplicação
@@ -14,6 +16,10 @@ function AdminDashboard() {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadStatus, setUploadStatus] = useState('');
+    const [songs, setSongs] = useState([]);
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onDrop = useCallback(acceptedFiles => {
         setUploadedFiles(prev => [...prev, ...acceptedFiles]);
@@ -106,6 +112,46 @@ function AdminDashboard() {
             margin: '0 auto',
             overflow: 'visible',
             inset: 'auto'
+        }
+    };
+
+    useEffect(() => {
+        fetchSongs();
+    }, []);
+
+    const fetchSongs = async () => {
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                navigate('/admin');
+                return;
+            }
+
+            const response = await fetch(`${API_URL}/songs/`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setSongs(data);
+            } else if (response.status === 401) {
+                localStorage.removeItem('token');
+                navigate('/admin');
+            } else {
+                const errorData = await response.json();
+                setError(errorData.detail || 'Erro ao carregar as músicas');
+            }
+        } catch (error) {
+            setError('Erro ao conectar com o servidor');
+            console.error('Erro:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 

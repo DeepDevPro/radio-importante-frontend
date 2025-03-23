@@ -1,44 +1,45 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 import './ForgotPasswordPage.css';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) {
-      setMessage('Por favor, preencha o campo de email.');
-      return;
-    }
-    
-    setIsLoading(true);
     setMessage('');
+    setError('');
+    setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/auth/request-password-reset', {
+      const response = await fetch(`${API_URL}/auth/request-password-reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        credentials: 'include',
+        mode: 'cors',
+        body: JSON.stringify({ email })
       });
 
-      const data = await response.json();
-      
       if (response.ok) {
+        setMessage('Se o email existir em nossa base de dados, você receberá um link para redefinir sua senha.');
+        setEmail('');
         setIsSuccess(true);
-        setMessage('Se o email existir em nossa base, você receberá as instruções para redefinir sua senha.');
       } else {
-        throw new Error(data.detail || 'Ocorreu um erro ao processar sua solicitação.');
+        const errorData = await response.json();
+        setError(errorData.detail || 'Erro ao processar a solicitação');
       }
     } catch (error) {
-      setMessage('Erro ao conectar com o servidor. Tente novamente mais tarde.');
-      console.error('Erro na recuperação de senha:', error);
+      setError('Erro ao conectar com o servidor');
+      console.error('Erro:', error);
     } finally {
       setIsLoading(false);
     }
@@ -62,9 +63,9 @@ const ForgotPasswordPage = () => {
                 autoComplete="email"
               />
             </div>
-            {message && (
-              <div className={`message ${isSuccess ? 'success' : 'error'}`}>
-                {message}
+            {error && (
+              <div className="error-message">
+                {error}
               </div>
             )}
             <div className="buttons">

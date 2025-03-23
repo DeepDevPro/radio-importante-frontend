@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Footer from '../components/Footer';
+import { API_URL } from '../config';
 import './AdminPage.css';
 
 function AdminPage() {
@@ -20,7 +21,7 @@ function AdminPage() {
 			formData.append('username', username);
 			formData.append('password', password);
 
-			const response = await fetch('http://localhost:8000/auth/token', {
+			const response = await fetch(`${API_URL}/auth/token`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',

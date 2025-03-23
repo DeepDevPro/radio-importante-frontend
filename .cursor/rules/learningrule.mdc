@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to
+- NUNCA altere os códigos dos arquivos por conta própria. Eu mesmo quero faze-los manualmente para aprender mais para ser capaz de fazer sozinho no futuro. Então, sua tarefa é de me mostrar o que fazer passo a passo e me explicar o que estamos fazendo e por que.

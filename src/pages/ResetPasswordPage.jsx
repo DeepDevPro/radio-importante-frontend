@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { API_URL } from '../config';
 import './ResetPasswordPage.css';
 
 const ResetPasswordPage = () => {
@@ -27,27 +28,29 @@ const ResetPasswordPage = () => {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:8000/auth/reset-password', {
+      const formData = new URLSearchParams();
+      formData.append('token', token);
+      formData.append('new_password', formData.new_password);
+
+      const response = await fetch(`${API_URL}/auth/reset-password`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({
-          token: token,
-          new_password: formData.new_password,
-        }),
+        body: formData
       });
-
-      const data = await response.json();
 
       if (response.ok) {
         setIsSuccess(true);
         setMessage('Senha alterada com sucesso!');
+        navigate('/admin', { state: { message: 'Senha redefinida com sucesso!' } });
       } else {
-        setMessage(data.detail || 'Erro ao redefinir a senha.');
+        const errorData = await response.json();
+        setMessage(errorData.detail || 'Erro ao redefinir a senha.');
       }
     } catch (error) {
       setMessage('Erro ao conectar com o servidor. Tente novamente mais tarde.');
+      console.error('Erro:', error);
     } finally {
       setIsLoading(false);
     }
