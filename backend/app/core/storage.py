@@ -3,6 +3,7 @@ from botocore.config import Config
 from fastapi import UploadFile
 import os
 from typing import Optional
+from datetime import datetime, timedelta
 
 class StorageManager:
     def __init__(self):
@@ -24,7 +25,7 @@ class StorageManager:
     async def upload_file(self, file: UploadFile, folder: str = "musicas") -> Optional[str]:
         """
         Faz upload de um arquivo para o Digital Ocean Spaces
-        Retorna a URL do arquivo se bem sucedido, None caso contrário
+        Retorna o caminho do arquivo se bem sucedido, None caso contrário
         """
         try:
             # Criar o caminho completo do arquivo
@@ -41,12 +42,32 @@ class StorageManager:
                 ContentType=file.content_type
             )
             
-            # Gerar URL do arquivo
-            url = f"https://{self.bucket}.{self.region}.digitaloceanspaces.com/{file_path}"
-            return url
+            # Retornar apenas o caminho do arquivo, não a URL completa
+            return file_path
             
         except Exception as e:
             print(f"Erro no upload: {str(e)}")
+            return None
+
+    def get_signed_url(self, file_path: str, expires_in: int = 3600) -> Optional[str]:
+        """
+        Gera uma URL assinada temporária para um arquivo
+        :param file_path: Caminho do arquivo no bucket
+        :param expires_in: Tempo de expiração em segundos (padrão: 1 hora)
+        :return: URL assinada ou None se houver erro
+        """
+        try:
+            url = self.s3_client.generate_presigned_url(
+                'get_object',
+                Params={
+                    'Bucket': self.bucket,
+                    'Key': file_path
+                },
+                ExpiresIn=expires_in
+            )
+            return url
+        except Exception as e:
+            print(f"Erro ao gerar URL assinada: {str(e)}")
             return None
 
     def delete_file(self, file_path: str) -> bool:

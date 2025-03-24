@@ -29,8 +29,8 @@ async def create_song(
         )
 
     # Fazer upload do arquivo para o Digital Ocean Spaces
-    file_url = await storage_manager.upload_file(file)
-    if not file_url:
+    file_path = await storage_manager.upload_file(file)
+    if not file_path:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro ao fazer upload do arquivo"
@@ -40,13 +40,25 @@ async def create_song(
     db_song = Song(
         title=title,
         artist=artist,
-        file_path=file_url,
+        file_path=file_path,
         duration=duration
     )
     db.add(db_song)
     db.commit()
     db.refresh(db_song)
-    return db_song
+
+    # Gerar URL assinada para o arquivo
+    signed_url = storage_manager.get_signed_url(db_song.file_path)
+    if not signed_url:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao gerar URL do arquivo"
+        )
+
+    # Adicionar a URL assinada à resposta
+    response_song = SongSchema.model_validate(db_song)
+    response_song.file_url = signed_url
+    return response_song
 
 @router.get("/", response_model=List[SongSchema])
 def read_songs(
@@ -55,10 +67,18 @@ def read_songs(
     db: Session = Depends(get_db)
 ):
     """
-    Retorna a lista de músicas.
+    Retorna a lista de músicas com URLs assinadas.
     """
     songs = db.query(Song).offset(skip).limit(limit).all()
-    return songs
+    response_songs = []
+    
+    for song in songs:
+        song_schema = SongSchema.model_validate(song)
+        signed_url = storage_manager.get_signed_url(song.file_path)
+        song_schema.file_url = signed_url if signed_url else None
+        response_songs.append(song_schema)
+    
+    return response_songs
 
 @router.get("/{song_id}", response_model=SongSchema)
 def read_song(

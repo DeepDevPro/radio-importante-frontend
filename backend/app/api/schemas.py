@@ -32,12 +32,12 @@ class SongBase(BaseModel):
     title: str
     artist: str
     duration: int
-    is_active: Optional[bool] = True
+    is_active: bool = True
 
 class SongCreate(SongBase):
     file_path: str
 
-class SongUpdate(BaseModel):
+class SongUpdate(SongBase):
     title: Optional[str] = None
     artist: Optional[str] = None
     duration: Optional[int] = None
@@ -46,6 +46,7 @@ class SongUpdate(BaseModel):
 class Song(SongBase):
     id: int
     file_path: str
+    file_url: Optional[str] = None  # URL assinada temporária
     created_at: datetime
     updated_at: datetime
 

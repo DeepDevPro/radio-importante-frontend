@@ -1,1 +1,4 @@
-const API_URL = "https://api.importantestudio.com"; console.log("API_URL:", API_URL); window.API_URL = API_URL;
+const isDevelopment = process.env.NODE_ENV === 'development';
+const API_URL = isDevelopment ? "http://localhost:8000" : "https://api.importantestudio.com";
+
+export { API_URL };
