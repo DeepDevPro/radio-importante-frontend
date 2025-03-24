@@ -187,7 +187,7 @@ function AdminDashboard() {
 
                 setUploadStatus(`Enviando ${file.name}...`);
 
-                const response = await fetch(`${window.API_URL}/songs/`, {
+                const response = await fetch(`${API_URL}/songs/`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
